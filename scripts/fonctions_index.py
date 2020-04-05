@@ -67,14 +67,14 @@ def ecritTexteDansUnFichier(texte, fichier):
         FI.write(texte)
 
 
-# LECTURE D'UN OBJET QUELCONQUE DEPUIS UN FICHIER BINAIRE
+# LECTURE D'UN FICHIER JSON (TODO: à modifier)
 def litJSONDepuisFichier(fichier):
     with open(fichier, "rb") as FI:
         objet = json.load(FI)
     return objet
 
 
-# ECRITURE D'UN OBJET DANS UN FICHIER BINAIRE
+# ECRITURE D'UN FICHIER JSON
 def ecritJSONDansFichier(objet, fichier):
     with open(fichier, "w+", encoding="utf8") as FI:
         json.dump(objet, FI, ensure_ascii=False, indent=4, separators=(',', ': '))
