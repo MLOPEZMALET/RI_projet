@@ -59,20 +59,35 @@ def indexeur_termes(chemin):
     # choper erreur de placement: être au bon endroit pour lancer
     chemins = lister_chemins_fichiers(chemin)
     noms = lister_noms_fichiers(chemin)
-    print(noms)
-    id = 0
     for chemin, nom in zip(chemins, noms):
-        print("indexation de " + str(nom))
+        print("extraction vocabulaire de " + str(nom))
         # texte = extraitTexteDuFichier(chemin, nom)
         tokensLemmePos, lang = lemmatiseurTexte(chemin, nom)
         tokens_normalises = normaliseTokens(tokensLemmePos, lang)
         tokens = filtrage_fin(tokens_normalises)
         termes_par_doc[nom] = tokens
-        id += 1
         for terme in tokens:
             total_termes_indexes.append(terme)
     # renvoie l'index en ordre alphabétique multilingue + le dictionnaire avec clé= doc/valeur=lemmes
-    return sorted(total_termes_indexes), termes_par_doc
+    return sorted(set(total_termes_indexes)), termes_par_doc
+
+
+def indexeur_inverse(total_termes_indexes, termes_par_doc, index_documents):
+    index_inverse = defaultdict()
+    for terme in total_termes_indexes:
+        if terme not in index_inverse.keys():
+            index_inverse[terme] = []
+        else:
+            continue
+        for id_doc in index_documents.keys():
+            titre = index_documents[id_doc][0]
+            for doc in termes_par_doc.keys():
+                if (titre == doc) and (terme in termes_par_doc[doc]):
+                    voc_doc = termes_par_doc[doc]
+                    id_et_freq = (id_doc, voc_doc.count(terme))
+                    index_inverse[terme].append(id_et_freq)
+    return index_inverse
+
 
 
 # ___UTILS___
@@ -205,14 +220,12 @@ print(len(tokens))
 tokens_filtres = filtrage_fin(tokens)
 print("tokens gardés: " + str(tokens_filtres))
 print(len(tokens_filtres))
-
+"""
 # INDEXATION
 
-vocabulaire, index_inverse = indexeur_termes(path_corpus_initiaux)
-mots_uniques = sorted(set(vocabulaire))
-print("résultats: ")
-print("total mots:" + str(len(vocabulaire)))
-print("total mots uniques: " + str(len(mots_uniques)))
-print(mots_uniques)
-print(index_inverse["103558-article.txt"])
-"""
+vocabulaire, termes_par_doc = indexeur_termes(path_corpus_initiaux)
+index_docs = indexeur_documents(path_corpus_initiaux)
+index_inverse = indexeur_inverse(vocabulaire, termes_par_doc, index_docs)
+print(index_inverse["international"])
+#print(mots_uniques)
+#print(index_inverse["103558-article.txt"])
