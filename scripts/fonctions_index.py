@@ -27,7 +27,7 @@
 import os
 import sys
 import re
-import pickle
+import json
 from langdetect import detect
 
 
@@ -68,16 +68,16 @@ def ecritTexteDansUnFichier(texte, fichier):
 
 
 # LECTURE D'UN OBJET QUELCONQUE DEPUIS UN FICHIER BINAIRE
-def litObjetDepuisFichier(fichier):
+def litJSONDepuisFichier(fichier):
     with open(fichier, "rb") as FI:
-        objet = pickle.load(FI)
+        objet = json.load(FI)
     return objet
 
 
 # ECRITURE D'UN OBJET DANS UN FICHIER BINAIRE
-def ecritObjetDansFichier(objet, fichier):
-    with open(fichier, "wb") as FI:
-        pickle.dump(objet, FI)
+def ecritJSONDansFichier(objet, fichier):
+    with open(fichier, "w+", encoding="utf8") as FI:
+        json.dump(objet, FI, ensure_ascii=False, indent=4, separators=(',', ': '))
 
 
 # ----------------- traitements TAL----------------------------------

@@ -23,7 +23,7 @@ PROJET RI
 → la fonction indexeur_termes() crée le vocabulaire qui sera le keyset du dictionnaire.  
 → la fonction indexeur_inverse() crée l'index inversé à partir de ce que renvoie l'indexeur de documents et l'indexeur de termes  
 
-- stockage en json (json.dump, json.load): KO  
+- stockage en json (json.dump, json.load): OK  
 → il faut stocker en json l'index des documents et l'index inversé, ça permettra de le rendre incrémental  
 
 - Chaque document indexé sera dupliqué dans un unique dossier documentsIndexes: KO  

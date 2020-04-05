@@ -8,11 +8,13 @@ from fonctions_index import (
     desaccentueLesTokens,
     minusculiseLesTokens,
     normaliseTokens,
+    ecritJSONDansFichier
 )
 import pprint
 import treetaggerwrapper
 from collections import defaultdict
 from langdetect import detect
+import json
 
 # TODO: index incrementale
 # TODO: gestion des erreurs
@@ -23,7 +25,10 @@ from langdetect import detect
 path_corpus_initiaux = os.path.join("..", "corpus", "initiaux")
 path_sans_balise = os.path.join("..", "corpus", "sans_balises")
 path_scripts_relative = os.path.join("..", "..", "scripts")
-tree_tagger_path = "/home/mlopezmalet/tree-tagger/cmd/tree-tagger-french"
+#tree_tagger_path = "/home/mlopezmalet/tree-tagger/cmd/tree-tagger-french"
+path_index = os.path.join(".", "_index")
+chemin_index_inverse = "./_index/indexInverse"
+chemin_index_docs = "./_index/indexDocuments"
 
 
 # ___INDEXATION DOCUMENTS___
@@ -42,6 +47,7 @@ def indexeur_documents(chemin):
         titres.append(titre)
     for i in range(len(noms_fichiers)):
         index_docs[i] = [noms_fichiers[i], titres[i]]
+    ecritJSONDansFichier(index_docs, chemin_index_docs)
     return index_docs
 
 
@@ -85,6 +91,7 @@ def indexeur_inverse(total_termes_indexes, termes_par_doc, index_documents):
                     voc_doc = termes_par_doc[doc]
                     id_et_freq = (id_doc, voc_doc.count(terme))
                     index_inverse[terme].append(id_et_freq)
+    ecritJSONDansFichier(index_inverse, chemin_index_inverse)
     return index_inverse
 
 
@@ -224,6 +231,6 @@ print(len(tokens_filtres))
 vocabulaire, termes_par_doc = indexeur_termes(path_corpus_initiaux)
 index_docs = indexeur_documents(path_corpus_initiaux)
 index_inverse = indexeur_inverse(vocabulaire, termes_par_doc, index_docs)
-print(index_inverse["international"])
+#print(index_inverse["international"])
 #print(mots_uniques)
 #print(index_inverse["103558-article.txt"])
