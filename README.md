@@ -26,7 +26,7 @@ PROJET RI
 - stockage en json (json.dump, json.load): OK  
 → il faut stocker en json l'index des documents et l'index inversé, ça permettra de le rendre incrémental  
 
-- Chaque document indexé sera dupliqué dans un unique dossier documentsIndexes: KO  
+- Chaque document indexé sera dupliqué dans un unique dossier documentsIndexes: OK  
 → mais on a la fonction ecritTexteDansUnFichier(), il faudra juste l'ajouter  
 
 - bilingue: OK  
