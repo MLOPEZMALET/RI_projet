@@ -38,16 +38,16 @@ PROJET RI
 - exécution ligne de commande (_python3 indexerDocuments <chemin de dossier>_): KO  
 → pas encore d'appel à des arguments proposés par l'utilisateur  
 
-- création de logs: KO  
 
 
 2. Requêtes
 
 - à faire
 
-3. Présentation
+3. Finitions
 
-
+- création de logs: KO  
+- try/except
 - rédaction du README
 - commenter, organiser, nettoyer code
 - présenter un exemple d'utilisation
