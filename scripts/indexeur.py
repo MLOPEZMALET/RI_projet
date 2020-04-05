@@ -14,7 +14,6 @@ import treetaggerwrapper
 from collections import defaultdict
 from langdetect import detect
 
-# TODO: index inversé
 # TODO: index incrementale
 # TODO: gestion des erreurs
 # TODO: log
@@ -53,7 +52,6 @@ def indexeur_termes(chemin):
     """ à partir du chemin d'un dossier, renvoie un dictionnaire qui, pour chaque nom de fichier en clé, a pour valeur les lemmes des termes qu'il contient"""
     # TODO: pas incrémental
     # TODO: pickle
-    # TODO: Pour le moment, renvoie un dict[doc] = lemmes, il manque la fréquence et l'ID (voir quel type de contenant utiliser: nested dict?)
     termes_par_doc = defaultdict()
     total_termes_indexes = []
     # choper erreur de placement: être au bon endroit pour lancer
@@ -73,6 +71,7 @@ def indexeur_termes(chemin):
 
 
 def indexeur_inverse(total_termes_indexes, termes_par_doc, index_documents):
+    " renvoie un dictionnaire avec en clé un terme et en valeur une liste de tuples tels que terme:[(id doc1, freq terme doc1), (id doc2, freq terme doc2)...]"
     index_inverse = defaultdict()
     for terme in total_termes_indexes:
         if terme not in index_inverse.keys():
@@ -87,7 +86,6 @@ def indexeur_inverse(total_termes_indexes, termes_par_doc, index_documents):
                     id_et_freq = (id_doc, voc_doc.count(terme))
                     index_inverse[terme].append(id_et_freq)
     return index_inverse
-
 
 
 # ___UTILS___
