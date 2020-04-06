@@ -32,11 +32,11 @@ PROJET RI
 - bilingue: OK  
 → avec langdetect, on reconnaît la langue, on passe le tree-tagger adéquat (fonction lemmatiseurTexte()), puis on filtre en fonction des balises de la langue reconnue (fonction filtreMotsVides() dans  normaliseTexte()  
 
-- incrémental (l’indexation devra pouvoir être mise à jour sans doublons si on lui présente un nouveau dossier à indexer. Pour cela, avant d’indexer, il faudra lire l’éventuel fichier index depuis le disque): KO  
-→ pour le moment, comme aucun stockage, ne permet pas d'ajouter des termes.  
+- incrémental (l’indexation devra pouvoir être mise à jour sans doublons si on lui présente un nouveau dossier à indexer. Pour cela, avant d’indexer, il faudra lire l’éventuel fichier index depuis le disque): OK  
 
-- exécution ligne de commande (_python3 indexerDocuments <chemin de dossier>_): KO  
-→ pas encore d'appel à des arguments proposés par l'utilisateur  
+- aucune répétition de documents possible: KO
+
+
 
 
 
@@ -46,6 +46,8 @@ PROJET RI
 
 3. Finitions
 
+- exécution ligne de commande (_python3 indexerDocuments <chemin de dossier>_): KO  
+→ pas encore d'appel à des arguments proposés par l'utilisateur  
 - création de logs: KO  
 - try/except
 - rédaction du README

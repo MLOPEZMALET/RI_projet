@@ -56,6 +56,7 @@ def indexeur_documents(chemin):
             index_docs[i] = [noms_fichiers[i], titres[i]]
             ecritJSONDansFichier(index_docs, chemin_index_docs)
     else:
+        # éviter doublons
         new_index_docs = defaultdict()
         start_id = len(index_docs)
         stop_id = start_id + len(titres)
@@ -95,7 +96,13 @@ def indexeur_termes(chemin):
 
 def indexeur_inverse(total_termes_indexes, termes_par_doc, index_documents):
     " renvoie un dictionnaire avec en clé un terme et en valeur une liste de tuples tels que terme:[(id doc1, freq terme doc1), (id doc2, freq terme doc2)...]"
-    index_inverse = defaultdict()
+    if os.path.isfile(chemin_index_inverse):
+        initial = False
+        with open(chemin_index_inverse) as file:
+            index_inverse = json.load(file)
+    else:
+        initial = True
+        index_inverse = defaultdict()
     for terme in total_termes_indexes:
         if terme not in index_inverse.keys():
             index_inverse[terme] = []
@@ -245,9 +252,9 @@ print(len(tokens_filtres))
 """
 # INDEXATION
 
-#vocabulaire, termes_par_doc = indexeur_termes(path_corpus_initiaux)
+vocabulaire, termes_par_doc = indexeur_termes(path_corpus_complementaires)
 index_docs = indexeur_documents(path_corpus_complementaires)
-#index_inverse = indexeur_inverse(vocabulaire, termes_par_doc, index_docs)
+index_inverse = indexeur_inverse(vocabulaire, termes_par_doc, index_docs)
 #print(index_inverse["international"])
 #print(mots_uniques)
 #print(index_inverse["103558-article.txt"])
