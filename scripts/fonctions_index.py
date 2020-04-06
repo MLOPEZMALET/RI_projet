@@ -80,6 +80,10 @@ def ecritJSONDansFichier(objet, fichier):
         json.dump(objet, FI, ensure_ascii=False, indent=4, separators=(',', ': '))
 
 
+def ajouteJSONDansFichier(objet, fichier):
+    pass
+
+
 # ----------------- traitements TAL----------------------------------
 
 # EXTRACTION DU TEXTE BRUT D'UN DOCUMENT XML

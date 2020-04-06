@@ -23,12 +23,14 @@ import json
 # ___PATHS___
 
 path_corpus_initiaux = os.path.join("..", "corpus", "initiaux")
+path_corpus_complementaires = os.path.join("..", "corpus", "complémentaires")
 path_sans_balise = os.path.join("..", "corpus", "sans_balises")
 path_scripts_relative = os.path.join("..", "..", "scripts")
 #tree_tagger_path = "/home/mlopezmalet/tree-tagger/cmd/tree-tagger-french"
 path_index = os.path.join(".", "_index")
 chemin_index_inverse = "./_index/indexInverse"
 chemin_index_docs = "./_index/indexDocuments"
+path_docs_indexes = ""
 
 
 # ___INDEXATION DOCUMENTS___
@@ -36,18 +38,32 @@ chemin_index_docs = "./_index/indexDocuments"
 
 def indexeur_documents(chemin):
     """ renvoie un dictionnaire avec pour clé l'id d'un document, et en valeur une liste contenant son nom et son titre"""
-    # TODO: INDEX INCREMENTAL if index_documents existe déjà, commencer la fonction avec in i in range (les nombres qui restent à indexer)
-    # TODO: sauvegarder en JSON
-    titres = []
-    index_docs = defaultdict()
+    if os.path.isfile(chemin_index_docs):
+        initial = False
+        with open(chemin_index_docs) as file:
+            index_docs = json.load(file)
+    else:
+        initial = True
+        index_docs = defaultdict()
     noms_fichiers = lister_noms_fichiers(chemin)
     chemins_fichiers = lister_chemins_fichiers(chemin)
+    titres = []
     for fichier in chemins_fichiers:
         titre = extraitTitreDuFichier(fichier)
         titres.append(titre)
-    for i in range(len(noms_fichiers)):
-        index_docs[i] = [noms_fichiers[i], titres[i]]
-    ecritJSONDansFichier(index_docs, chemin_index_docs)
+    if initial:
+        for i in range(len(noms_fichiers)):
+            index_docs[i] = [noms_fichiers[i], titres[i]]
+            ecritJSONDansFichier(index_docs, chemin_index_docs)
+    else:
+        new_index_docs = defaultdict()
+        start_id = len(index_docs)
+        stop_id = start_id + len(titres)
+        list_id = [i for i in range(start_id, stop_id)]
+        for id, nom, titre in zip(list_id, noms_fichiers, titres):
+            new_index_docs[id] = [nom, titre]
+        index_docs.update(new_index_docs)
+        ecritJSONDansFichier(index_docs, chemin_index_docs)
     return index_docs
 
 
@@ -64,6 +80,7 @@ def indexeur_termes(chemin):
     chemins = lister_chemins_fichiers(chemin)
     noms = lister_noms_fichiers(chemin)
     for chemin, nom in zip(chemins, noms):
+        os.system(f"cp {chemin} ../corpus/documentsIndexes")
         print("extraction vocabulaire de " + str(nom))
         # texte = extraitTexteDuFichier(chemin, nom)
         tokensLemmePos, lang = lemmatiseurTexte(chemin, nom)
@@ -228,9 +245,11 @@ print(len(tokens_filtres))
 """
 # INDEXATION
 
-vocabulaire, termes_par_doc = indexeur_termes(path_corpus_initiaux)
-index_docs = indexeur_documents(path_corpus_initiaux)
-index_inverse = indexeur_inverse(vocabulaire, termes_par_doc, index_docs)
+#vocabulaire, termes_par_doc = indexeur_termes(path_corpus_initiaux)
+index_docs = indexeur_documents(path_corpus_complementaires)
+#index_inverse = indexeur_inverse(vocabulaire, termes_par_doc, index_docs)
 #print(index_inverse["international"])
 #print(mots_uniques)
 #print(index_inverse["103558-article.txt"])
+
+# PIPELINE
