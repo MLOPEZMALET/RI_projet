@@ -34,7 +34,7 @@ PROJET RI
 
 - incrémental (l’indexation devra pouvoir être mise à jour sans doublons si on lui présente un nouveau dossier à indexer. Pour cela, avant d’indexer, il faudra lire l’éventuel fichier index depuis le disque): OK  
 
-- aucune répétition de documents possible: KO
+- aucune répétition de documents possible: OK
 
 
 

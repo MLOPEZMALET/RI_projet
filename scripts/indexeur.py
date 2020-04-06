@@ -33,6 +33,9 @@ chemin_index_docs = "./_index/indexDocuments"
 path_docs_indexes = ""
 
 
+
+
+
 # ___INDEXATION DOCUMENTS___
 
 
@@ -56,15 +59,30 @@ def indexeur_documents(chemin):
             index_docs[i] = [noms_fichiers[i], titres[i]]
             ecritJSONDansFichier(index_docs, chemin_index_docs)
     else:
-        # éviter doublons
-        new_index_docs = defaultdict()
-        start_id = len(index_docs)
-        stop_id = start_id + len(titres)
-        list_id = [i for i in range(start_id, stop_id)]
-        for id, nom, titre in zip(list_id, noms_fichiers, titres):
-            new_index_docs[id] = [nom, titre]
-        index_docs.update(new_index_docs)
-        ecritJSONDansFichier(index_docs, chemin_index_docs)
+        # TODO: éviter doublons
+        for doc in index_docs.keys():
+            titre = index_docs[doc][1]
+            nom = index_docs[doc][0]
+            if titre in titres and nom in noms_fichiers:
+                titres.remove(titre)
+                noms_fichiers.remove(nom)
+                print("document doublon ignoré: " + nom)
+            else:
+                continue
+        if len(titres) != 0 and len(noms_fichiers) != 0:
+            new_index_docs = defaultdict()
+            start_id = len(index_docs)
+            stop_id = start_id + len(titres)
+            list_id = [i for i in range(start_id, stop_id)]
+            for id, nom, titre in zip(list_id, noms_fichiers, titres):
+                new_index_docs[id] = [nom, titre]
+            print("nouveaux documents indexés: " + str(len(new_index_docs)))
+            index_docs.update(new_index_docs)
+            ecritJSONDansFichier(index_docs, chemin_index_docs)
+            print("total documents indexés: " + str(len(index_docs)))
+        else:
+            print("pas de nouveaux documents indexés")
+    print("total documents dans l'index: " + str(len(index_docs)))
     return index_docs
 
 
@@ -211,52 +229,18 @@ def filtrage_fin(tokens):
     return tokens
 
 
-# ___MAIN___
-
-# ##### TESTS #####
-"""
-# RECUPERER LES NOMS/CHEMINS DES FICHIERS
-
-print(os.getcwd())
-liste_chemins_fichiers = lister_chemins_fichiers(path_corpus_initiaux)
-liste_noms_fichiers = lister_noms_fichiers(path_corpus_initiaux)
-
-liste_chemins_fichiers_clean = lister_chemins_fichiers(path_sans_balise)
-liste_noms_fichiers_clean = lister_noms_fichiers(path_sans_balise)
-
-
-nom_fichier_test = liste_noms_fichiers[0]
-fichier_test = liste_chemins_fichiers[5]
-fichier_anglais_test = liste_chemins_fichiers[-5]
-nom_fichier_anglais_test = liste_noms_fichiers[-5]
-# print(fichier_test)
-fichier_test_clean = liste_chemins_fichiers_clean[0]
-nom_fichier_test_clean = liste_noms_fichiers_clean[0]
-
-# EXTRACTION BALISES
-
-titre = extraitTitreDuFichier(fichier_test)
-print(titre)
-texte = extraitTexteDuFichier(fichier_test, nom_fichier_test)
-
-# PRETRAITEMENTS
-
-tokensLemmePos = lemmatiseurTexte(fichier_anglais_test, nom_fichier_anglais_test)
-print(tokensLemmePos)
-tokens = normaliseTokens(tokensLemmePos)
-print(tokens)
-print(len(tokens))
-tokens_filtres = filtrage_fin(tokens)
-print("tokens gardés: " + str(tokens_filtres))
-print(len(tokens_filtres))
-"""
-# INDEXATION
-
-vocabulaire, termes_par_doc = indexeur_termes(path_corpus_complementaires)
-index_docs = indexeur_documents(path_corpus_complementaires)
-index_inverse = indexeur_inverse(vocabulaire, termes_par_doc, index_docs)
-#print(index_inverse["international"])
-#print(mots_uniques)
-#print(index_inverse["103558-article.txt"])
-
 # PIPELINE
+
+
+def indexation_corpus(chemin_corpus):
+    print("1. Indexation des documents")
+    index_docs = indexeur_documents(chemin_corpus)
+    print("2. Indexation des termes")
+    vocabulaire, termes_par_doc = indexeur_termes(chemin_corpus)
+    print("3. Création de l'index inversé")
+    indexeur_inverse(vocabulaire, termes_par_doc, index_docs)
+    print("Indexation finalisée")
+
+    # ___MAIN___
+
+indexation_corpus(path_corpus_complementaires)
