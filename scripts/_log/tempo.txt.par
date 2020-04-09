@@ -1,14 +1,5 @@
-1	Quelle	quel	DETWH	DETWH	n=s|g=f	2	det	2	det
-2	famille	famille	NC	NC	n=s|g=f	0	_	0	_
-3	!	!	PONCT	PONCT		2	ponct	2	ponct
-
-1	Les	les	DET	DET	n=p	4	det	4	det
-2	trois	trois	ADJ	ADJ	s=card|n=p	4	mod	4	mod
-3	petits	petit	ADJ	ADJ	n=p|g=m	4	mod	4	mod
-4	loups	loup	NC	NC	n=p|g=m	0	_	0	_
-5	et	et	CC	CC		4	coord	4	coord
-6	le	le	DET	DET	n=s|g=m	8	det	8	det
-7	grand	grand	ADJ	ADJ	n=s|g=m	8	mod	8	mod
-8	méchant	méchant	NC	NC	n=s|g=m	5	dep_coord	5	dep_coord
-9	cochon	cochon	NC	NC	n=s|g=m	8	mod	8	mod
-
+Économie	NOM	économie
+sociétés	NOM	société
+salaire	NOM	salaire
+Chômages	NOM	chômage
+citoyens	NOM	citoyen

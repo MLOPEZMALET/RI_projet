@@ -1,0 +1,39 @@
+
+requête: Chômages citoyens +Économie +sociétés -salaire 
+
+termes: ['economie', 'societe', 'salaire', 'chomage', 'citoyen'] 
+
+résultat: {0: {'economie': 1, 'citoyen': 1}, 4: {'economie': 4, 'societe': 3, 'salaire': 3}, 7: {'economie': 1, 'societe': 1}, 11: {'economie': 4, 'societe': 1}, 14: {'economie': 3, 'societe': 1, 'chomage': 3, 'citoyen': 1}, 15: {'economie': 1, 'societe': 4}, 22: {'economie': 2, 'societe': 1, 'chomage': 1, 'citoyen': 1}, 26: {'economie': 9, 'societe': 1}, 5: {'societe': 1, 'citoyen': 2}, 10: {'societe': 5, 'citoyen': 3}} 
+
+résultats filtrés: {7: {'economie': 1, 'societe': 1}, 11: {'economie': 4, 'societe': 1}, 14: {'economie': 3, 'societe': 1, 'chomage': 3, 'citoyen': 1}, 15: {'economie': 1, 'societe': 4}, 22: {'economie': 2, 'societe': 1, 'chomage': 1, 'citoyen': 1}, 26: {'economie': 9, 'societe': 1}}
+
+résultats détaillées: 
+nom de fichier: 2001-08-HALIMI-15544.txt
+ titre de texte: À QUAND LA TRANSPARENCE DANS LES MÉDIAS
+ sous-titre: Liberté de la presse, censures de l'argent
+ termes trouvés dans ce fichier: {'economie': 1, 'societe': 1}
+
+nom de fichier: 2002-07-MOTCHANE-16708.txt
+ titre de texte: DROIT DES BREVETS OU DROIT À LA SANTÉ
+ sous-titre: Quand l’OMS épouse la cause des firmes pharmaceutiques
+ termes trouvés dans ce fichier: {'economie': 4, 'societe': 1}
+
+nom de fichier: 2001-01-DRWESKI-14685.txt
+ titre de texte: AU SEUIL D'UNE ADHÉSION COÛTEUSE
+ sous-titre: L'Union européenne fait peur aux Polonais
+ termes trouvés dans ce fichier: {'economie': 3, 'societe': 1, 'chomage': 3, 'citoyen': 1}
+
+nom de fichier: 2003-01-SERVANT-9856.txt
+ titre de texte: UNE PRIORITÉ GÉOSTRATÉGIQUE
+ sous-titre: Offensive sur l'or noir africain
+ termes trouvés dans ce fichier: {'economie': 1, 'societe': 4}
+
+nom de fichier: 2003-01-KAPELIOUK-9652.txt
+ titre de texte: PARADOXES D'UN SCRUTIN
+ sous-titre: Le camp de la paix israélien à l'épreuve
+ termes trouvés dans ce fichier: {'economie': 2, 'societe': 1, 'chomage': 1, 'citoyen': 1}
+
+nom de fichier: 2002-03-JOHNSON-16293.txt
+ titre de texte: LES IMPASSES D'UN MODÈLE
+ termes trouvés dans ce fichier: {'economie': 9, 'societe': 1}
+

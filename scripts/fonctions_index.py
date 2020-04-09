@@ -18,9 +18,9 @@
 #       - un fichier 'log' est cree pour tracer les traitements
 #
 #   attention :
-# 	1. dans cette version, l'indexation n'est pas 'incrementale', c'est-à dire
-# 	l'ajout à l'index de fichiers individuels ou d'un dossier ne fonctionne pas !
-# 	2. les dossiers _log et _index doivent dejà exister !
+#   1. dans cette version, l'indexation n'est pas 'incrementale', c'est-à dire
+#   l'ajout à l'index de fichiers individuels ou d'un dossier ne fonctionne pas !
+#   2. les dossiers _log et _index doivent dejà exister !
 # -------------------------------------------------------------------------------------------------------------
 
 
@@ -29,7 +29,7 @@ import sys
 import re
 import json
 from langdetect import detect
-
+import treetaggerwrapper
 
 # -------- à parametrer ---------------
 # corpus à indexer
@@ -89,8 +89,8 @@ def ajouteJSONDansFichier(objet, fichier):
 # EXTRACTION DU TEXTE BRUT D'UN DOCUMENT XML
 #  -> renvoie une string
 #  remarque : pour une indexation 'multilingue', il faudrait :
-# 	- detecter la langue (langdetect.py)
-#    	- la retourner aussi
+#   - detecter la langue (langdetect.py)
+#       - la retourner aussi
 def extraitTexteDuDocument(fichier):
     texte = litTexteDuFichier(fichier)
     # suppression des balises xml  et des lignes vierges
@@ -200,6 +200,34 @@ def normaliseTokens(tokens, lang):
     tokens = minusculiseLesTokens(tokens)
     return tokens
 
+
+#----------------pour la requete-------------------------
+def normaliseTokensRequete(tokens):
+    tokens = desaccentueLesTokens(tokens)
+    tokens = minusculiseLesTokens(tokens)
+    return tokens
+
+
+
+def lemmatiseTermes(liste):
+    tokensLemme = []
+    # execute TreeTagger
+    texte = " ".join(liste)
+    if detect(texte) == "fr":
+        tagger = treetaggerwrapper.TreeTagger(TAGLANG="fr")
+        tags = tagger.tag_text(texte)
+    else:
+        tagger = treetaggerwrapper.TreeTagger(TAGLANG="en")
+        tags = tagger.tag_text(texte)
+        lang = "EN"
+    for ligne in tags:
+        ligne = ligne.strip()
+        defToken = ligne.split("\t")
+        # filtre les tokens vides
+        if len(defToken) >= 3:
+            tokensLemme.append(defToken[2])
+    # renvoie une liste de tokens (lemme et pos)
+    return tokensLemme
 """
 # ------------------ MAIN ---------------------------------------
 indexDocuments = dict()

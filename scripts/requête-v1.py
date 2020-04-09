@@ -21,14 +21,14 @@ import os
 import sys
 import re
 import pickle 
-from FS_fichiers import litTexteDuFichier, ecritTexteDansUnFichier
+from fonctions_index import litTexteDuFichier, ecritTexteDansUnFichier
 from FS_tal import lemmatiseTexte, normaliseTokens
 
 PARSEUR = 'TALISMANE'
    
 fiIndex = "./_index/indexInverse"
 fiDocs = "./_index/indexDocuments"
-doCorpus = "../corpus/miniCorpus/FR/"
+doCorpus = "../corpus/documentsIndexes"
 
 fiTxt = "./_log/tempo.txt" 
 
@@ -37,7 +37,7 @@ log = ""
 
 
 indexDocuments = dict()
-indexInversé = dict ()
+indexInverse = dict ()
 
 # 0. lecture des index
 if os.path.isfile (fiDocs) :
@@ -47,8 +47,8 @@ if os.path.isfile (fiDocs) :
 
 if os.path.isfile (fiIndex) :
     with open(fiIndex, 'rb') as FI :
-        indexInversé = pickle.load(FI)
-    print (indexInversé)
+        indexInverse = pickle.load(FI)
+    print (indexInverse)
  
 # 1. lecture de la requête (mots clés)
 print("votre requête ?")
@@ -69,8 +69,8 @@ for doc in indexDocuments.keys() :
 
 for terme in termes:
     # pour chaque terme de la requête
-    if terme in indexInversé :
-        for doc in indexInversé[terme] : nbMatch[doc] += 1
+    if terme in indexInverse :
+        for doc in indexInverse[terme] : nbMatch[doc] += 1
 log += "\t%s" % (str (nbMatch))
 
 # 4. affichage des résultats
