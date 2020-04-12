@@ -16,19 +16,21 @@
 # 
 #   remarque :  ne donne pas d'info sur les termes trouvés
 # -------------------------------------------------------------------------------------------------------------
+import numpy as np
+from numpy import dot
+from numpy.linalg import norm
 
 import os
 import sys
+import math
 import re
 import pickle 
 import json
 from fonctions_index import litTexteDuFichier, ecritTexteDansUnFichier, lemmatiseTexte, normaliseTokens, normaliseTokensRequete, lemmatiseTermes
 
-PARSEUR = 'TALISMANE'
    
 fiIndex = "./_index/indexInverse"
 fiDocs = "./_index/indexDocuments"
-doCorpus = "../corpus/miniCorpus/FR/"
 corpus_sansBalise = "../corpus/sans_balises"
 
 fiTxt = "./_log/tempo.txt" 
@@ -103,7 +105,86 @@ def standardiseLesTermes(liste):
     liste = normaliseTokensRequete(liste)
     return liste
 
-# 6. calculer les scores avec TF-IDF
+
+
+
+#---------------les fonctions pour la parite scores avec TF-IDF----------------------
+#créer une matrice avec les documents en ligne, les termes en colonne. 
+#dans la case l'occurence de termes dans chaque document 
+def creerMatrice(document_index, index_inverse):
+    #créer une liste de tous les termes 
+    listeDesTermes = []
+    for terme in index_inverse:
+        listeDesTermes.append(terme)
+
+    #créer une matrice
+    matrice = np.zeros([len(document_index),len(index_inverse)])
+
+    #ajouter les occurrences dans la matrice
+    for doc in document_index:
+        for terme in index_inverse:
+            for couple in index_inverse.get(terme):
+                if str(couple[0]) == doc:
+                    matrice[int(doc), listeDesTermes.index(terme)] = couple[1]
+    return matrice
+
+#créer la matrice avec les valeurs tf-idf de chaque terme
+def TFIDF(matrice):
+    matrice_TFIDF = np.zeros(matrice.shape)
+    for i in range (matrice.shape[0]):
+        for j in range (matrice.shape[1]):
+          tf = matrice[i,j]
+          idf = math.log(matrice.shape[0] /(np.count_nonzero(matrice[:,j])))  
+          matrice_TFIDF[i,j] = tf * idf 
+    return matrice_TFIDF
+
+
+#retourner le idf de tous les termes dans indexInverse
+def getIDF(doc_indexInverse, doc_indexDocuments):
+    dicIDF = {}
+    for terme in doc_indexInverse:
+        idf = math.log(len(doc_indexDocuments) / len(doc_indexInverse[terme]))
+        dicIDF[terme] = idf
+    return dicIDF
+
+
+#retourner le vecteur de la requete(tf-idf), avec les termes à inclure et les termes optionnels
+def vec_termesRequete(listeDesTermes, doc_idf):
+    tf = 1 / len(listeDesTermes)
+    tfidf_liste = []
+    for terme in listeDesTermes:
+        if terme in doc_idf:
+            tf_idf = tf * doc_idf[terme]
+            tfidf_liste.append(tf_idf)
+    return tfidf_liste
+
+
+#retourner une liste qui comprend tous les termes dans le ducoment index inverse
+def getTousTermes(document_indexInverse): 
+    tousLesTermes = []
+    for terme in document_indexInverse:
+        tousLesTermes.append(terme)
+    return tousLesTermes
+
+
+#trier les documents selon la similarité consinu
+def trierDocuments(resultatFinal, termesEffectifs, matriceTFIDF, listeTousTermes, vecRequete):
+    resultat_avec_score = {}
+    score_consinu = lambda v1, v2 : dot(v1, v2)/(norm(v1)*norm(v2))
+    
+    for id_doc, occus in resultatFinal.items():
+        vec_doc = []
+        for mot in termesEffectifs:
+            if mot in occus:
+                vec_doc.append(matriceTFIDF[id_doc][listeTousTermes.index(mot)])
+            else:
+                vec_doc.append(0)
+            
+        score = score_consinu(vecRequete, vec_doc)
+        resultat_avec_score[id_doc] = score
+        
+    resultat_sorted = sorted(resultat_avec_score.items(), key=lambda x: x[1], reverse=True)
+    return resultat_sorted
 
 
 
@@ -121,7 +202,6 @@ log += "\nrequête: %s \n" % (requete)
 
 #stocker les termes triés
 termes_totals, termes_inclure, termes_exclure, termes_optionnel = trierTermesDeRequete(requete)
-print(f"所有的词{termes_totals},必须的词{termes_inclure},避免的词{termes_exclure},无所谓{termes_optionnel}")
 termes_totals_string = " ".join(termes_totals)
 ecritTexteDansUnFichier (termes_totals_string, fiTxt) 
 
@@ -145,24 +225,41 @@ log += "\nrésultats filtrés: %s\n" % str(nbMatch_final)
 
 #affichage du résultat dans le terminal
 print("\n{nombre} documents ont été trouvés!\n".format(nombre=len(nbMatch_final)))
-print(nbMatch_final)
+
+#--------------------------trier les documents--------------------------------
+termes_effectifs = termes_inclure_final + termes_optionnel_final
+
+#obtenir le vecteur de la requête
+liste_idf = getIDF(indexInverse, indexDocuments)
+vec_req = vec_termesRequete(termes_effectifs, liste_idf)
+#la liste de tous les termes sert à retirer la postition des termes
+liste_termes_totals = getTousTermes(indexInverse)
+#créer les matrices
+matrice_freqs = creerMatrice(indexDocuments,indexInverse)
+matrice_tfidf = TFIDF(matrice_freqs)
+
+resultat_final_sorted = trierDocuments(nbMatch_final, termes_effectifs, matrice_tfidf, liste_termes_totals, vec_req)
+
+
+
 
 
 #extraire les sous-titres s'ils existent et les stocker dans "log"
-log += "\nrésultats détaillées: \n"
-for doc, nb in nbMatch_final.items():#sorted(nbMatch.items(), key=lambda item: item[0], reverse=True) :
-    info_document = indexDocuments[str(doc)]
+log += "\nrésultats rangés et détaillés: \n"
+for doc in resultat_final_sorted:
+    nb_doc, score = doc
+    info_document = indexDocuments[str(nb_doc)]
     nom_fichier = info_document[0]
     titre_complet = info_document[1]
 
     if "\n\n" in titre_complet:
         titre_principal = titre_complet[:titre_complet.index("\n\n")]
         sous_titre = titre_complet[titre_complet.index("\n\n")+2:]
-        log += f"nom de fichier: {nom_fichier}\n titre de texte: {titre_principal}\n sous-titre: {sous_titre}\n termes trouvés dans ce fichier: {nb}\n\n"
+        log += f"score: {score}\n nom de fichier: {nom_fichier}\n titre de texte: {titre_principal}\n sous-titre: {sous_titre}\n\n" + "-"*40+"\n"
     else:
-        log += f"nom de fichier: {nom_fichier}\n titre de texte: {titre_complet}\n termes trouvés dans ce fichier: {nb}\n\n"
+        log += f"score: {score}\n nom de fichier: {nom_fichier}\n titre de texte: {titre_complet}\n\n" + "-"*40+"\n"
 
-
+    print(f"rang: {resultat_final_sorted.index(doc)+1}\nscore: {score}\ntitre: {titre_complet}\n" + "-"*40)
 
 # sauvegarde du log
 ecritTexteDansUnFichier (log, fiLog)

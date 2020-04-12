@@ -208,7 +208,6 @@ def normaliseTokensRequete(tokens):
     return tokens
 
 
-
 def lemmatiseTermes(liste):
     tokensLemme = []
     # execute TreeTagger
@@ -228,6 +227,10 @@ def lemmatiseTermes(liste):
             tokensLemme.append(defToken[2])
     # renvoie une liste de tokens (lemme et pos)
     return tokensLemme
+
+
+
+
 """
 # ------------------ MAIN ---------------------------------------
 indexDocuments = dict()
