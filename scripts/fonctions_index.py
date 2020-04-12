@@ -218,7 +218,6 @@ def lemmatiseTermes(liste):
     else:
         tagger = treetaggerwrapper.TreeTagger(TAGLANG="en")
         tags = tagger.tag_text(texte)
-        lang = "EN"
     for ligne in tags:
         ligne = ligne.strip()
         defToken = ligne.split("\t")

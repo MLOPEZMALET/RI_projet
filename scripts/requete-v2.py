@@ -110,7 +110,7 @@ def standardiseLesTermes(liste):
 
 #---------------les fonctions pour la parite scores avec TF-IDF----------------------
 #créer une matrice avec les documents en ligne, les termes en colonne. 
-#dans la case l'occurence de termes dans chaque document 
+#et dans la case, l'occurence d'un terme dans un document 
 def creerMatrice(document_index, index_inverse):
     #créer une liste de tous les termes 
     listeDesTermes = []
@@ -211,9 +211,20 @@ termes_totals_a_chercher = normaliseTokensRequete (tokens)
 log += "\ntermes: %s \n" % (termes_totals_a_chercher)
 
 #lamatiser et normaliser les termes iclures et les termes exculres
-termes_inclure_final = standardiseLesTermes(termes_inclure)
-termes_exclure_final = standardiseLesTermes(termes_exclure)
-termes_optionnel_final = standardiseLesTermes(termes_optionnel)
+if len(termes_inclure) != 0:
+    termes_inclure_final = standardiseLesTermes(termes_inclure)
+else:
+    termes_inclure_final = termes_inclure
+
+if len(termes_exclure) != 0:
+    termes_exclure_final = standardiseLesTermes(termes_exclure)
+else:
+    termes_exclure_final = termes_exclure
+
+if len(termes_optionnel) != 0:
+    termes_optionnel_final = standardiseLesTermes(termes_optionnel)
+else:
+    termes_optionnel_final = termes_optionnel
 
 #faire la reqête, chercher tous les documents qui comprennent tous les termes saisis, on obtient un résultat brut
 nbMatch = requeteDesTermes(termes_totals_a_chercher, indexInverse)
@@ -245,7 +256,7 @@ resultat_final_sorted = trierDocuments(nbMatch_final, termes_effectifs, matrice_
 
 
 #extraire les sous-titres s'ils existent et les stocker dans "log"
-log += "\nrésultats rangés et détaillés: \n"
+log += "\nrésultats rangés et détaillés: \n\n"
 for doc in resultat_final_sorted:
     nb_doc, score = doc
     info_document = indexDocuments[str(nb_doc)]
@@ -255,11 +266,11 @@ for doc in resultat_final_sorted:
     if "\n\n" in titre_complet:
         titre_principal = titre_complet[:titre_complet.index("\n\n")]
         sous_titre = titre_complet[titre_complet.index("\n\n")+2:]
-        log += f"score: {score}\n nom de fichier: {nom_fichier}\n titre de texte: {titre_principal}\n sous-titre: {sous_titre}\n\n" + "-"*40+"\n"
+        log += f"score: {score}\n id: {nb_doc}\n nom de fichier: {nom_fichier}\n titre de texte: {titre_principal}\n sous-titre: {sous_titre}\n\n" + "-"*40+"\n"
     else:
-        log += f"score: {score}\n nom de fichier: {nom_fichier}\n titre de texte: {titre_complet}\n\n" + "-"*40+"\n"
+        log += f"score: {score}\n id: {nb_doc}\n nom de fichier: {nom_fichier}\n titre de texte: {titre_complet}\n\n" + "-"*40+"\n"
 
-    print(f"rang: {resultat_final_sorted.index(doc)+1}\nscore: {score}\ntitre: {titre_complet}\n" + "-"*40)
+    print(f"rang: {resultat_final_sorted.index(doc)+1}\nid: {nb_doc}\n score: {score}\ntitre: {titre_complet}\n" + "-"*40)
 
 # sauvegarde du log
 ecritTexteDansUnFichier (log, fiLog)
