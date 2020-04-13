@@ -1,5 +1,2 @@
-<<<<<<< HEAD
-economie salaire chômage
-=======
 économie salaire chômage
->>>>>>> 533e405b72fc67e72b9c7978d7896d0a3e9fc3f2
+
