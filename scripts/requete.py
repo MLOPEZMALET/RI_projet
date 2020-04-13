@@ -26,7 +26,7 @@ import math
 import re
 import pickle 
 import json
-from fonctions_index import litTexteDuFichier, ecritTexteDansUnFichier, lemmatiseTexte, normaliseTokens, normaliseTokensRequete, lemmatiseTermes
+from fonctions_index import litTexteDuFichier, ecritTexteDansUnFichier, normaliseTokens, normaliseTokensRequete, lemmatiseTermes
 
    
 fiIndex = "./_index/indexInverse"
