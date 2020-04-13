@@ -168,9 +168,8 @@ def getTousTermes(document_indexInverse):
 
 
 #trier les documents selon la similarité consinu
-def trierDocuments(resultatFinal, termesEffectifs, matriceTFIDF, listeTousTermes, vecRequete):
+def trierDocuments(resultatFinal, termesEffectifs, matriceTFIDF, listeTousTermes):
     resultat_avec_score = {}
-    score_consinu = lambda v1, v2 : dot(v1, v2)/(norm(v1)*norm(v2))
     
     for id_doc, occus in resultatFinal.items():
         vec_doc = []
@@ -180,7 +179,7 @@ def trierDocuments(resultatFinal, termesEffectifs, matriceTFIDF, listeTousTermes
             else:
                 vec_doc.append(0)
             
-        score = score_consinu(vecRequete, vec_doc)
+        score = sum(vec_doc)
         resultat_avec_score[id_doc] = score
         
     resultat_sorted = sorted(resultat_avec_score.items(), key=lambda x: x[1], reverse=True)
@@ -245,13 +244,11 @@ liste_idf = getIDF(indexInverse, indexDocuments)
 vec_req = vec_termesRequete(termes_effectifs, liste_idf)
 #la liste de tous les termes sert à retirer la postition des termes
 liste_termes_totals = getTousTermes(indexInverse)
-#créer les matrices
+#créer les matrice_freqs
 matrice_freqs = creerMatrice(indexDocuments,indexInverse)
 matrice_tfidf = TFIDF(matrice_freqs)
 
-resultat_final_sorted = trierDocuments(nbMatch_final, termes_effectifs, matrice_tfidf, liste_termes_totals, vec_req)
-
-
+resultat_final_sorted = trierDocuments(nbMatch_final, termes_effectifs, matrice_tfidf, liste_termes_totals)
 
 
 
@@ -262,6 +259,7 @@ for doc in resultat_final_sorted:
     info_document = indexDocuments[str(nb_doc)]
     nom_fichier = info_document[0]
     titre_complet = info_document[1]
+    titre_principal = ""
 
     if "\n\n" in titre_complet:
         titre_principal = titre_complet[:titre_complet.index("\n\n")]
@@ -270,7 +268,7 @@ for doc in resultat_final_sorted:
     else:
         log += f"score: {score}\n id: {nb_doc}\n nom de fichier: {nom_fichier}\n titre de texte: {titre_complet}\n\n" + "-"*40+"\n"
 
-    print(f"rang: {resultat_final_sorted.index(doc)+1}\nid: {nb_doc}\n score: {score}\ntitre: {titre_complet}\n" + "-"*40)
+    print(f"rang: {resultat_final_sorted.index(doc)+1}\nid: {nb_doc}\n score: {score}\ntitre: {titre_principal}\n" + "-"*40)
 
 # sauvegarde du log
 ecritTexteDansUnFichier (log, fiLog)
