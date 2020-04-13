@@ -34,7 +34,7 @@
 	-  +mot: le mot est obligatoirement présent dans le document
 	- -mot: le mot est obligatoirement absent du document
 	- mot: si le mot est recherché, mais sa présence n'est pas obligatoire
-- Le programme vous renvoie une liste de résultats ordonnée par pertinence, à partir d'un calcul fondé sur le tf-idf (*overlap score measure*\*) 
+- Le programme vous renvoie une liste de résultats ordonnée par pertinence, à partir d'un calcul fondé sur le tf-idf (*overlap score measure*\*)   
 \* Christopher Manning, Introduction to information retrieval, 2009, p.119
 
 
