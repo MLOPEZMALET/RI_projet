@@ -1,55 +1,49 @@
-PROJET RI
+#PROJET RI
 
-- Objet du projet final:
-1. L’indexation ‘incrémentale’ d’un corpus bilingue français / anglais
+## M2 TAL parcours IM - Chen SUN, Mélanie LOPEZ MALET
+
+### Objet du projet: 
+1. L’indexation ‘incrémentale’ d’un corpus bilingue français / anglais en format XML
 2. L’interrogation booléenne de ce corpus par mots-clefs
 
-→ Documents à renvoyer:
-- code python
-- documentation ‘readme’
-- index calculés
-- exemples de résultat de requête : mots-clés et liste documents trouves
+### Fonctionnement
 
-1. Indexation
+##### 1. Indexer le corpus:
+- exécuter en ligne de commande: '''python3 indexeur.py chemin/du/corpus/a/indexer'''
+ 	- index des documents:
+		→ un index des documents du corpus sera crée dans le dossier _index/IndexDocs
+		→ l'index des documents est constitué d'un id, du nom du fichier et  du titre du document
+	- index inversé:
+		→ création d'un index inversé à partir d'un vocabulaire bilingue normalisé
+		→ l'index inversé se trouve dans _index/IndexInverse
+		→ le programme associe à chaque terme du vocabulaire la liste des documents où il apparaît avec sa fréquence respective
+	- corpus indexés:
+		→ une copie de chaque document indexé est créée dans le dossier Corpus/documentsIndexes
+ 
+##### 2. Enrichir le corpus:
 
-- index des documents: OK  
-→ fonction indexeur_documents()  
-→ A chaque id (dictionnaire) seront associés :le nom du fichier du document indexé + le titre de l’article  
+- Si vous voulez ajouter des documents à votre index, pas de problème. Vous pouvez:
+	→ ajouter les nouveaux documents dans le dossier Corpus/
+	→ les stocker dans un nouveau dossier
+- Dans les deux cas, vous n'avez qu'à relancer la commande '''python3 indexeur.py chemin/du/corpus/a/indexer''' pour que les nouveaux documents soient indexés, sans aucun doublon.
 
-- lemmes normalisés des documents en deux langues: OK  
-→ fonction indexeur_termes(): extrait et prétraite les termes puis renvoie un set de termes uniques + un dictionnaire qui organise les termes par document   
+##### 3. Faire une requête:
 
-- index inversé (pour chaque terme, il comporte, outre le numéro (ou id) du document, sa fréquence dans celui-ci): OK  
-→ la fonction indexeur_termes() crée le vocabulaire qui sera le keyset du dictionnaire.  
-→ la fonction indexeur_inverse() crée l'index inversé à partir de ce que renvoie l'indexeur de documents et l'indexeur de termes  
-
-- stockage en json (json.dump, json.load): OK  
-→ il faut stocker en json l'index des documents et l'index inversé, ça permettra de le rendre incrémental  
-
-- Chaque document indexé sera dupliqué dans un unique dossier documentsIndexes: OK  
-→ mais on a la fonction ecritTexteDansUnFichier(), il faudra juste l'ajouter  
-
-- bilingue: OK  
-→ avec langdetect, on reconnaît la langue, on passe le tree-tagger adéquat (fonction lemmatiseurTexte()), puis on filtre en fonction des balises de la langue reconnue (fonction filtreMotsVides() dans  normaliseTexte()  
-
-- incrémental (l’indexation devra pouvoir être mise à jour sans doublons si on lui présente un nouveau dossier à indexer. Pour cela, avant d’indexer, il faudra lire l’éventuel fichier index depuis le disque): OK  
-
-- aucune répétition de documents possible: OK
-
+- Pour interroger votre corpus, exécutez la commande '''python3 requete.py'''
+- Ecrivez votre requête. Vous pouvez la préciser en utilisant la syntaxe suivante: en respectant les règles suivantes:
+	-  +mot: le mot est obligatoirement présent dans le document
+	- -mot: le mot est obligatoirement absent du document
+	- mot: si le mot est recherché, mais sa présence n'est pas obligatoire
+- Le programme vous renvoie une liste de résultats ordonnée par pertinence, à partir d'un calcul fondé sur le tf-idf (*overlap score measure*\*) 
+\* Christopher Manning, Introduction to information retrieval, 2009, p.119
 
 
+#### 4. Un exemple d'utilisation
 
+- Vous trouverez dans le dossier Corpus/ un corpus de test composé d'articles du journal Le Monde Diplomatique, divisé en deux dossiers (initiaux et complémentaires)
+- Le dossier _index/ contient l'index inversé et l'index des documents de ce corpus.
+- Vous pouvez également consulter des exemples de requête et leurs résultats dans _log/requete.log
 
-2. Requêtes
+### En cas de problème:
 
-- à faire
-
-3. Finitions
-
-- exécution ligne de commande (_python3 indexerDocuments <chemin de dossier>_): KO  
-→ pas encore d'appel à des arguments proposés par l'utilisateur  
-- création de logs: KO  
-- try/except
-- rédaction du README
-- commenter, organiser, nettoyer code
-- présenter un exemple d'utilisation
+Le dossier _log contient des fichiers qui se génèrent à chaque exécution du programme et permettent de s'assurer de son bon fonctionnement.

@@ -1,50 +1,75 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# -------------------------------------------------------------------------------------------------------------
+#   python3 indexeur.py chemin/du/dossier/a/indexer
+#
+#   Indexation des xml d'un dossier:
+#   Parcours des fichiers xml; pour chacun :
+#       1. extraction du contenu textuel et sauvegarde
+#       2. lemmatisation : TreeTagger
+#       3. normalisation des tokens
+#       4. mise à jour de l'index inverse
+#       5. utilisation d'un dictionnaire des documents (id/chemin)
+#   sauvegarde fichier des index (inverse & documents)
+#
+#   remarques :
+#       - un fichier 'log' est cree pour tracer les traitements
+# -------------------------------------------------------------------------------------------------------------
+
+
 import os
 import re
 import glob
+import sys
 from fonctions_index import (
     litTexteDuFichier,
     ecritTexteDansUnFichier,
-    filtreMotsVides,
-    desaccentueLesTokens,
-    minusculiseLesTokens,
     normaliseTokens,
-    ecritJSONDansFichier
+    ecritJSONDansFichier,
+    filtrage_fin
 )
-import pprint
 import treetaggerwrapper
 from collections import defaultdict
 from langdetect import detect
 import json
 
-# TODO: index incrementale
 # TODO: gestion des erreurs
 # TODO: log
 
 # ___PATHS___
 
+# corpus donnés
 path_corpus_initiaux = os.path.join("..", "corpus", "initiaux")
 path_corpus_complementaires = os.path.join("..", "corpus", "complémentaires")
+# fichiers texte sans balise (cf lignes commentées de extraitTexteDuFichier())
 path_sans_balise = os.path.join("..", "corpus", "sans_balises")
+# scripts
 path_scripts_relative = os.path.join("..", "..", "scripts")
-#tree_tagger_path = "/home/mlopezmalet/tree-tagger/cmd/tree-tagger-french"
+
+# indexation
 path_index = os.path.join(".", "_index")
 chemin_index_inverse = "./_index/indexInverse"
 chemin_index_docs = "./_index/indexDocuments"
-path_docs_indexes = ""
+path_docs_indexes = "/home/mlopezmalet/MLOPEZMALET/m2/RI/TP/RI_projet/corpus/documentsIndexes"
 
+# log
+doLog = "./_log/"
 
-
+fiLog = "./_log/indexeur.log"
+log = ""
 
 
 # ___INDEXATION DOCUMENTS___
 
-
 def indexeur_documents(chemin):
     """ renvoie un dictionnaire avec pour clé l'id d'un document, et en valeur une liste contenant son nom et son titre"""
+    # vérifie si un index a déjà été créé et le lit
     if os.path.isfile(chemin_index_docs):
         initial = False
         with open(chemin_index_docs) as file:
             index_docs = json.load(file)
+    # si aucun index n'est trouvé, en crée un nouveau
     else:
         initial = True
         index_docs = defaultdict()
@@ -54,12 +79,13 @@ def indexeur_documents(chemin):
     for fichier in chemins_fichiers:
         titre = extraitTitreDuFichier(fichier)
         titres.append(titre)
+    # crée l'index de documents du corpus
     if initial:
         for i in range(len(noms_fichiers)):
             index_docs[i] = [noms_fichiers[i], titres[i]]
             ecritJSONDansFichier(index_docs, chemin_index_docs)
+    # actualise l'index de documents en évitant les doublons
     else:
-        # TODO: éviter doublons
         for doc in index_docs.keys():
             titre = index_docs[doc][1]
             nom = index_docs[doc][0]
@@ -69,6 +95,7 @@ def indexeur_documents(chemin):
                 print("document doublon ignoré: " + nom)
             else:
                 continue
+        # indexe les nouveaux documents de façon incrémentale
         if len(titres) != 0 and len(noms_fichiers) != 0:
             new_index_docs = defaultdict()
             start_id = len(index_docs)
@@ -91,8 +118,6 @@ def indexeur_documents(chemin):
 
 def indexeur_termes(chemin):
     """ à partir du chemin d'un dossier, renvoie un dictionnaire qui, pour chaque nom de fichier en clé, a pour valeur les lemmes des termes qu'il contient"""
-    # TODO: pas incrémental
-    # TODO: pickle
     termes_par_doc = defaultdict()
     total_termes_indexes = []
     # choper erreur de placement: être au bon endroit pour lancer
@@ -101,31 +126,38 @@ def indexeur_termes(chemin):
     for chemin, nom in zip(chemins, noms):
         os.system(f"cp {chemin} ../corpus/documentsIndexes")
         print("extraction vocabulaire de " + str(nom))
-        # texte = extraitTexteDuFichier(chemin, nom)
-        tokensLemmePos, lang = lemmatiseurTexte(chemin, nom)
+        tokensLemmePos, lang = lemmatiseurTexteAvecLangue(chemin, nom)
         tokens_normalises = normaliseTokens(tokensLemmePos, lang)
         tokens = filtrage_fin(tokens_normalises)
         termes_par_doc[nom] = tokens
         for terme in tokens:
             total_termes_indexes.append(terme)
-    # renvoie l'index en ordre alphabétique multilingue + le dictionnaire avec clé= doc/valeur=lemmes
+    # renvoie l'index en ordre alphabétique multilingue + le dictionnaire avec clé=doc / valeur=lemmes
     return sorted(set(total_termes_indexes)), termes_par_doc
 
 
+# ___INDEX INVERSÉ___
+
 def indexeur_inverse(total_termes_indexes, termes_par_doc, index_documents):
-    " renvoie un dictionnaire avec en clé un terme et en valeur une liste de tuples tels que terme:[(id doc1, freq terme doc1), (id doc2, freq terme doc2)...]"
+    """ paramètres:
+        - total_termes_indexes: vocabulaire du corpus, résultat de indexeur_termes()
+        - termes_par_doc: vocabulaire du corpus par document, résultat de indexeur_termes()
+        - index_documents: index des documents des corpus avec leurs noms et titres, résultat de indexeur_documents()
+        renvoie:
+        - un dictionnaire avec en clé un terme et en valeur une liste de tuples tels que terme:[(id doc1, freq terme doc1), (id doc2, freq terme doc2)...]"""
+    # vérifie si un index inversé existe déjà, si non, le crée
     if os.path.isfile(chemin_index_inverse):
-        initial = False
         with open(chemin_index_inverse) as file:
             index_inverse = json.load(file)
     else:
-        initial = True
         index_inverse = defaultdict()
+    # ajoute les termes nouveaux au vocabulaire si besoin
     for terme in total_termes_indexes:
         if terme not in index_inverse.keys():
             index_inverse[terme] = []
         else:
             continue
+        # récupère l'id des documents o sont présents les documents,
         for id_doc in index_documents.keys():
             titre = index_documents[id_doc][0]
             for doc in termes_par_doc.keys():
@@ -141,7 +173,7 @@ def indexeur_inverse(total_termes_indexes, termes_par_doc, index_documents):
 
 
 def lister_chemins_fichiers(chemin):
-    """renvoiz une liste contenant les chemins de tous les fichiers du dossier"""
+    """renvoie une liste contenant les chemins de tous les fichiers du dossier"""
     liste_chemins_fichier = glob.glob(chemin + "/*.txt")
     return liste_chemins_fichier
 
@@ -175,8 +207,8 @@ def extraitTexteDuFichier(fichier, nom_fichier):
     return texte
 
 
-def lemmatiseurTexte(fichier, nom_fichier):
-    """ appelle tree-tagger en fonction de la langue du texte, puis renvoie une liste de tokens+lemme+POS et la langue du doc"""
+def lemmatiseurTexteAvecLangue(fichier, nom_fichier):
+    """ appelle tree-tagger en fonction de la langue du texte, puis renvoie une liste de tokens+lemme+POS ainsi que la langue du document"""
     tokensLemmePos = []
     # execute TreeTagger
     texte = extraitTexteDuFichier(fichier, nom_fichier)
@@ -200,47 +232,35 @@ def lemmatiseurTexte(fichier, nom_fichier):
     return tokensLemmePos, lang
 
 
-def filtrage_fin(tokens):
-    """ filtre plus finement les tokens"""
-    tokens_out = []
-    for token in tokens:
-        if len(token) == 1 or token == "":
-            tokens.remove(token)
-            tokens_out.append(token)
-        elif (
-            (token[:2] == "l’")
-            or (token[:2] == "d’")
-            or (token[:2] == "s’")
-            or (token[:2] == "n’")
-        ):
-            fixed_token = token[2:]
-            tokens.append(fixed_token)
-            tokens.remove(token)
-            tokens_out.append(token)
-        elif token[:3] == "qu’":
-            fixed_token = token[3:]
-            tokens.append(fixed_token)
-            tokens.remove(token)
-            tokens_out.append(token)
-        elif len(token) == 2 and "’" in token:
-            tokens.remove(token)
-            tokens_out.append(token)
-    # print("tokens retirés: " + str(tokens_out))
-    return tokens
-
-
-# PIPELINE
+# ___PIPELINE___
 
 
 def indexation_corpus(chemin_corpus):
-    print("1. Indexation des documents")
+    global log
+    etapes = ["1. Indexation des documents", "2. Indexation des termes", "3. Création de l'index inversé", "Indexation finalisée"]
+    print(etapes[0])
     index_docs = indexeur_documents(chemin_corpus)
-    print("2. Indexation des termes")
+    log += etapes[0]
+    log += str(index_docs)
+    print(etapes[1])
     vocabulaire, termes_par_doc = indexeur_termes(chemin_corpus)
-    print("3. Création de l'index inversé")
-    indexeur_inverse(vocabulaire, termes_par_doc, index_docs)
-    print("Indexation finalisée")
+    log += etapes[1]
+    log += str(termes_par_doc)
+    print(etapes[2])
+    index_inverse = indexeur_inverse(vocabulaire, termes_par_doc, index_docs)
+    log += etapes[2]
+    log += str(index_inverse)
+    print(etapes[3])
 
-    # ___MAIN___
 
-indexation_corpus(path_corpus_complementaires)
+# ___MAIN___
+
+if __name__ == "__main__":
+    log = "chemin du corpus\n"
+    chemin = sys.argv[1]
+    print(f"Indexation du corpus situé à {chemin}")
+    log += chemin
+    log += "\n"
+    indexation_corpus(chemin)
+    # sauvegarde du log
+    ecritTexteDansUnFichier(log, fiLog)
