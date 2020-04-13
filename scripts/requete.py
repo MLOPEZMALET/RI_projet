@@ -168,86 +168,86 @@ def trierDocuments(resultatFinal, termesEffectifs, matriceTFIDF, listeTousTermes
 
 
 #----------------------------------main-------------------------------------------
+if __name__ == "__main__":
+    #lire les fichiers de l'index de documents et l'index inversé
+    indexDocuments = litIndexDocument(fiDocs)
+    indexInverse = litIndexInverse(fiIndex)
 
-#lire les fichiers de l'index de documents et l'index inversé
-indexDocuments = litIndexDocument(fiDocs)
-indexInverse = litIndexInverse(fiIndex)
+    #input la requête
+    print("votre requête ?")
+    requete = input()
+    print("votre requête est: ", requete)
+    log += "\nrequête: %s \n" % (requete)
 
-#input la requête
-print("votre requête ?")
-requete = input()
-print("votre requête est: ", requete)
-log += "\nrequête: %s \n" % (requete)
+    #stocker les termes triés
+    termes_totals, termes_inclure, termes_exclure, termes_optionnel = trierTermesDeRequete(requete)
+    termes_totals_string = " ".join(termes_totals)
+    ecritTexteDansUnFichier (termes_totals_string, fiTxt) 
 
-#stocker les termes triés
-termes_totals, termes_inclure, termes_exclure, termes_optionnel = trierTermesDeRequete(requete)
-termes_totals_string = " ".join(termes_totals)
-ecritTexteDansUnFichier (termes_totals_string, fiTxt) 
+    #lematiser et normaliser tous les termes de requête
+    tokens = lemmatiseTermes(termes_totals)
+    termes_totals_a_chercher = normaliseTokensRequete (tokens)
+    log += "\ntermes: %s \n" % (termes_totals_a_chercher)
 
-#lematiser et normaliser tous les termes de requête
-tokens = lemmatiseTermes(termes_totals)
-termes_totals_a_chercher = normaliseTokensRequete (tokens)
-log += "\ntermes: %s \n" % (termes_totals_a_chercher)
-
-#lamatiser et normaliser les termes iclures et les termes exculres
-if len(termes_inclure) != 0:
-    termes_inclure_final = standardiseLesTermes(termes_inclure)
-else:
-    termes_inclure_final = termes_inclure
-
-if len(termes_exclure) != 0:
-    termes_exclure_final = standardiseLesTermes(termes_exclure)
-else:
-    termes_exclure_final = termes_exclure
-
-if len(termes_optionnel) != 0:
-    termes_optionnel_final = standardiseLesTermes(termes_optionnel)
-else:
-    termes_optionnel_final = termes_optionnel
-
-#faire la reqête, chercher tous les documents qui comprennent tous les termes saisis, on obtient un résultat brut
-nbMatch = requeteDesTermes(termes_totals_a_chercher, indexInverse)
-log += "\nrésultat: %s \n" % (str(nbMatch))
-
-#filtrer le résultat brut en fonction des symboles "+" et "-"
-nbMatch_final = filtrerLeResultat(nbMatch, termes_inclure_final, termes_exclure_final)
-log += "\nrésultats filtrés: %s\n" % str(nbMatch_final)
-
-#affichage du résultat dans le terminal
-print("\n{nombre} documents ont été trouvés!\n".format(nombre=len(nbMatch_final)))
-
-#--------------------------trier les documents--------------------------------
-termes_effectifs = termes_inclure_final + termes_optionnel_final
-
-#la liste de tous les termes sert à retirer la postition des termes
-liste_termes_totals = getTousTermes(indexInverse)
-
-#créer les matrice_freqs
-matrice_freqs = creerMatrice(indexDocuments,indexInverse)
-matrice_tfidf = TFIDF(matrice_freqs)
-
-#trier les documents
-resultat_final_sorted = trierDocuments(nbMatch_final, termes_effectifs, matrice_tfidf, liste_termes_totals)
-
-
-
-#extraire les sous-titres s'ils existent et les stocker dans "log"
-log += "\nrésultats rangés et détaillés: \n\n"
-for doc in resultat_final_sorted:
-    nb_doc, score = doc
-    info_document = indexDocuments[str(nb_doc)]
-    nom_fichier = info_document[0]
-    titre_complet = info_document[1]
-    titre_principal = ""
-
-    if "\n\n" in titre_complet:
-        titre_principal = titre_complet[:titre_complet.index("\n\n")]
-        sous_titre = titre_complet[titre_complet.index("\n\n")+2:]
-        log += f"score: {score}\n id: {nb_doc}\n nom de fichier: {nom_fichier}\n titre de texte: {titre_principal}\n sous-titre: {sous_titre}\n\n" + "-"*40+"\n"
+    #lamatiser et normaliser les termes iclures et les termes exculres
+    if len(termes_inclure) != 0:
+        termes_inclure_final = standardiseLesTermes(termes_inclure)
     else:
-        log += f"score: {score}\n id: {nb_doc}\n nom de fichier: {nom_fichier}\n titre de texte: {titre_complet}\n\n" + "-"*40+"\n"
+        termes_inclure_final = termes_inclure
 
-    print(f"rang: {resultat_final_sorted.index(doc)+1}\nid: {nb_doc}\n score: {score}\ntitre: {titre_principal}\n" + "-"*40)
+    if len(termes_exclure) != 0:
+        termes_exclure_final = standardiseLesTermes(termes_exclure)
+    else:
+        termes_exclure_final = termes_exclure
 
-# sauvegarde du log
-ecritTexteDansUnFichier (log, fiLog)
+    if len(termes_optionnel) != 0:
+        termes_optionnel_final = standardiseLesTermes(termes_optionnel)
+    else:
+        termes_optionnel_final = termes_optionnel
+
+    #faire la reqête, chercher tous les documents qui comprennent tous les termes saisis, on obtient un résultat brut
+    nbMatch = requeteDesTermes(termes_totals_a_chercher, indexInverse)
+    log += "\nrésultat: %s \n" % (str(nbMatch))
+
+    #filtrer le résultat brut en fonction des symboles "+" et "-"
+    nbMatch_final = filtrerLeResultat(nbMatch, termes_inclure_final, termes_exclure_final)
+    log += "\nrésultats filtrés: %s\n" % str(nbMatch_final)
+
+    #affichage du résultat dans le terminal
+    print("\n{nombre} documents ont été trouvés!\n".format(nombre=len(nbMatch_final)))
+
+    #--------------------------trier les documents--------------------------------
+    termes_effectifs = termes_inclure_final + termes_optionnel_final
+
+    #la liste de tous les termes sert à retirer la postition des termes
+    liste_termes_totals = getTousTermes(indexInverse)
+
+    #créer les matrice_freqs
+    matrice_freqs = creerMatrice(indexDocuments,indexInverse)
+    matrice_tfidf = TFIDF(matrice_freqs)
+
+    #trier les documents
+    resultat_final_sorted = trierDocuments(nbMatch_final, termes_effectifs, matrice_tfidf, liste_termes_totals)
+
+
+
+    #extraire les sous-titres s'ils existent et les stocker dans "log"
+    log += "\nrésultats rangés et détaillés: \n\n"
+    for doc in resultat_final_sorted:
+        nb_doc, score = doc
+        info_document = indexDocuments[str(nb_doc)]
+        nom_fichier = info_document[0]
+        titre_complet = info_document[1]
+        titre_principal = ""
+
+        if "\n\n" in titre_complet:
+            titre_principal = titre_complet[:titre_complet.index("\n\n")]
+            sous_titre = titre_complet[titre_complet.index("\n\n")+2:]
+            log += f"score: {score}\n id: {nb_doc}\n nom de fichier: {nom_fichier}\n titre de texte: {titre_principal}\n sous-titre: {sous_titre}\n\n" + "-"*40+"\n"
+        else:
+            log += f"score: {score}\n id: {nb_doc}\n nom de fichier: {nom_fichier}\n titre de texte: {titre_complet}\n\n" + "-"*40+"\n"
+
+        print(f"rang: {resultat_final_sorted.index(doc)+1}\nid: {nb_doc}\n score: {score}\ntitre: {titre_principal}\n" + "-"*40)
+
+    # sauvegarde du log
+    ecritTexteDansUnFichier (log, fiLog)
