@@ -1,5 +1,5 @@
 
-requête: politiques Internationales 
+requête: politiques Internationale 
 
 termes: ['politique', 'international'] 
 
@@ -9,194 +9,194 @@ résultats filtrés: {0: {'politique': 8, 'international': 9}, 4: {'politique': 
 
 résultats rangés et détaillés: 
 
-score: 0.9999999999999999
- id: 4
- nom de fichier: 2002-03-WARDE-16195.txt
- titre de texte: CADRES ET EMPLOYÉS COMMUNIENT DANS LA « RELIGION » DU TRAVAIL
- sous-titre: Surexploitation joyeuse aux Etats-unis
+score: 13.719437544851093
+ id: 26
+ nom de fichier: 2002-03-JOHNSON-16293.txt
+ titre de texte: LES IMPASSES D'UN MODÈLE
 
 ----------------------------------------
-score: 0.9996306002187844
- id: 0
- nom de fichier: 2003-03-RAMONET-9870.txt
- titre de texte: De la guerre perpétuelle
-
-----------------------------------------
-score: 0.9972579309414241
- id: 22
- nom de fichier: 2003-01-KAPELIOUK-9652.txt
- titre de texte: PARADOXES D'UN SCRUTIN
- sous-titre: Le camp de la paix israélien à l'épreuve
-
-----------------------------------------
-score: 0.9937564916801428
- id: 9
- nom de fichier: 2002-01-PARINGAUX-16015.txt
- titre de texte: INDE ET PAKISTAN FACE À FACE
- sous-titre: Le Cachemire à l'heure afghane
-
-----------------------------------------
-score: 0.990954000951299
- id: 27
- nom de fichier: 2002-07-TSHIYEMBE-16697.txt
- titre de texte: DU MESSIANISME AUX RIVES DE LA MONDIALISATION
- sous-titre: Difficile gestation de l'Union africaine
-
-----------------------------------------
-score: 0.9887910825056431
- id: 11
- nom de fichier: 2002-07-MOTCHANE-16708.txt
- titre de texte: DROIT DES BREVETS OU DROIT À LA SANTÉ
- sous-titre: Quand l’OMS épouse la cause des firmes pharmaceutiques
-
-----------------------------------------
-score: 0.988791082505643
- id: 7
- nom de fichier: 2001-08-HALIMI-15544.txt
- titre de texte: À QUAND LA TRANSPARENCE DANS LES MÉDIAS
- sous-titre: Liberté de la presse, censures de l'argent
-
-----------------------------------------
-score: 0.985755450559837
- id: 10
- nom de fichier: 2002-03-ALGAZY-16302.txt
- titre de texte: RELANCE DU MOUVEMENT PACIFISTE
- sous-titre: Ces soldats israéliens qui disent non
-
-----------------------------------------
-score: 0.985755450559837
- id: 15
- nom de fichier: 2003-01-SERVANT-9856.txt
- titre de texte: UNE PRIORITÉ GÉOSTRATÉGIQUE
- sous-titre: Offensive sur l'or noir africain
-
-----------------------------------------
-score: 0.9843416374149457
+score: 13.233929729069393
  id: 23
  nom de fichier: 2001-09-DE_LA_GORCE-15631.txt
  titre de texte: LA PAIX MANQUÉE
  sous-titre: Logiques de guerre au Proche-Orient
 
 ----------------------------------------
-score: 0.9777830640125097
- id: 26
- nom de fichier: 2002-03-JOHNSON-16293.txt
- titre de texte: LES IMPASSES D'UN MODÈLE
+score: 9.07504664570972
+ id: 0
+ nom de fichier: 2003-03-RAMONET-9870.txt
+ titre de texte: De la guerre perpétuelle
 
 ----------------------------------------
-score: 0.9744467355451034
- id: 14
- nom de fichier: 2001-01-DRWESKI-14685.txt
- titre de texte: AU SEUIL D'UNE ADHÉSION COÛTEUSE
- sous-titre: L'Union européenne fait peur aux Polonais
+score: 8.729997002378443
+ id: 11
+ nom de fichier: 2002-07-MOTCHANE-16708.txt
+ titre de texte: DROIT DES BREVETS OU DROIT À LA SANTÉ
+ sous-titre: Quand l’OMS épouse la cause des firmes pharmaceutiques
 
 ----------------------------------------
-score: 0.9744467355451034
- id: 16
- nom de fichier: 2002-02-BEILIN-16167.txt
- titre de texte: OFFENSIVE CONCERTÉE CONTRE LES PALESTINIENS
- sous-titre: « Oui, Israël a un partenaire pour la paix »
+score: 8.036849821818498
+ id: 9
+ nom de fichier: 2002-01-PARINGAUX-16015.txt
+ titre de texte: INDE ET PAKISTAN FACE À FACE
+ sous-titre: Le Cachemire à l'heure afghane
 
 ----------------------------------------
-score: 0.22461869820985786
- id: 3
- nom de fichier: 103200-article.txt
- titre de texte: ISRAEL VERSUS PALESTINE VERSUS THE WORLD
- sous-titre: The Middle East : how the war cannot be won  
+score: 7.621571092262008
+ id: 10
+ nom de fichier: 2002-03-ALGAZY-16302.txt
+ titre de texte: RELANCE DU MOUVEMENT PACIFISTE
+ sous-titre: Ces soldats israéliens qui disent non
 
 ----------------------------------------
-score: 0.22461869820985786
+score: 7.621571092262008
+ id: 15
+ nom de fichier: 2003-01-SERVANT-9856.txt
+ titre de texte: UNE PRIORITÉ GÉOSTRATÉGIQUE
+ sous-titre: Offensive sur l'or noir africain
+
+----------------------------------------
+score: 5.8199980015856285
+ id: 7
+ nom de fichier: 2001-08-HALIMI-15544.txt
+ titre de texte: À QUAND LA TRANSPARENCE DANS LES MÉDIAS
+ sous-titre: Liberté de la presse, censures de l'argent
+
+----------------------------------------
+score: 4.919211456247439
+ id: 27
+ nom de fichier: 2002-07-TSHIYEMBE-16697.txt
+ titre de texte: DU MESSIANISME AUX RIVES DE LA MONDIALISATION
+ sous-titre: Difficile gestation de l'Union africaine
+
+----------------------------------------
+score: 4.152787295564891
  id: 5
  nom de fichier: 2002-07-CONESA-16699.txt
  titre de texte: REMISE EN QUESTION DES TRAITÉS DE DÉSARMEMENT
  sous-titre: Washington démantèle l’architecture internationale de sécurité
 
 ----------------------------------------
-score: 0.22461869820985786
- id: 25
- nom de fichier: 103455-article.txt
- titre de texte: HEALTH FOR ALL OR RICHES FOR SOME
- sous-titre: WHO's responsible ? 
+score: 3.6031461813527597
+ id: 16
+ nom de fichier: 2002-02-BEILIN-16167.txt
+ titre de texte: OFFENSIVE CONCERTÉE CONTRE LES PALESTINIENS
+ sous-titre: « Oui, Israël a un partenaire pour la paix »
 
 ----------------------------------------
-score: 0.22461869820985786
- id: 29
- nom de fichier: 103674-article.txt
- titre de texte: GLOBAL CRISIS OVER IRAQ
- sous-titre: Poles apart 
-
-----------------------------------------
-score: 0.22461869820985783
- id: 1
- nom de fichier: 103448-article.txt
- titre de texte: THE FUTURE OF A MARGINALISED CONTINENT 
- sous-titre: Can Africa really unify ?
-
-----------------------------------------
-score: 0.22461869820985783
+score: 3.3222298364519127
  id: 2
  nom de fichier: 103433-article.txt
  titre de texte: THREATS TO DISARMAMENT AND INTERNATIONAL SECURITY
  sous-titre: The new world disorder 
 
 ----------------------------------------
-score: 0.22461869820985783
- id: 6
- nom de fichier: 103342-article.txt
- titre de texte: INSECURE, EXASPERATED AND BORED WITH THE OLD POLITICS 
- sous-titre: The American shogunate
+score: 3.117638365571059
+ id: 22
+ nom de fichier: 2003-01-KAPELIOUK-9652.txt
+ titre de texte: PARADOXES D'UN SCRUTIN
+ sous-titre: Le camp de la paix israélien à l'épreuve
 
 ----------------------------------------
-score: 0.22461869820985783
- id: 8
- nom de fichier: 2001-08-FRANK-15516.txt
- titre de texte: PARADIS DE BANLIEUE, VERSION AMÉRICAINE
- sous-titre: Le bonheur est dans le centre commercial...
+score: 2.70235963601457
+ id: 14
+ nom de fichier: 2001-01-DRWESKI-14685.txt
+ titre de texte: AU SEUIL D'UNE ADHÉSION COÛTEUSE
+ sous-titre: L'Union européenne fait peur aux Polonais
 
 ----------------------------------------
-score: 0.22461869820985783
- id: 12
- nom de fichier: 103168-article.txt
- titre de texte: MEDIA OWNERSHIP AND BIAS
- sous-titre: France : his master's voice 
+score: 1.868754283004201
+ id: 29
+ nom de fichier: 103674-article.txt
+ titre de texte: GLOBAL CRISIS OVER IRAQ
+ sous-titre: Poles apart 
 
 ----------------------------------------
-score: 0.22461869820985783
+score: 1.1084259101164344
+ id: 4
+ nom de fichier: 2002-03-WARDE-16195.txt
+ titre de texte: CADRES ET EMPLOYÉS COMMUNIENT DANS LA « RELIGION » DU TRAVAIL
+ sous-titre: Surexploitation joyeuse aux Etats-unis
+
+----------------------------------------
+score: 0.8305574591129782
  id: 13
  nom de fichier: 103307-article.txt
  titre de texte: THE VALE OF SORROWS 
  sous-titre: Kashmir : partition's bitter legacy
 
 ----------------------------------------
-score: 0.22461869820985783
+score: 0.6229180943347337
+ id: 3
+ nom de fichier: 103200-article.txt
+ titre de texte: ISRAEL VERSUS PALESTINE VERSUS THE WORLD
+ sous-titre: The Middle East : how the war cannot be won  
+
+----------------------------------------
+score: 0.6229180943347337
+ id: 25
+ nom de fichier: 103455-article.txt
+ titre de texte: HEALTH FOR ALL OR RICHES FOR SOME
+ sous-titre: WHO's responsible ? 
+
+----------------------------------------
+score: 0.4152787295564891
+ id: 1
+ nom de fichier: 103448-article.txt
+ titre de texte: THE FUTURE OF A MARGINALISED CONTINENT 
+ sous-titre: Can Africa really unify ?
+
+----------------------------------------
+score: 0.4152787295564891
+ id: 12
+ nom de fichier: 103168-article.txt
+ titre de texte: MEDIA OWNERSHIP AND BIAS
+ sous-titre: France : his master's voice 
+
+----------------------------------------
+score: 0.4152787295564891
  id: 17
  nom de fichier: 103557-article.txt
  titre de texte: WHY THE LEFT IS ISRAEL'S ONLY HOPE FOR PEACE 
  sous-titre: Israel : politics beyond Sharon
 
 ----------------------------------------
-score: 0.22461869820985783
+score: 0.4152787295564891
  id: 19
  nom de fichier: 103558-article.txt
  titre de texte: AFRICA : EXTERNAL INTEREST AND INTERNAL INSECURITY 
  sous-titre: The new Gulf oil states
 
 ----------------------------------------
-score: 0.22461869820985783
+score: 0.4152787295564891
  id: 20
  nom de fichier: 103344-article.txt
  titre de texte: THE PEACE MOVEMENT REVIVAL 
  sous-titre: Israel's army refuseniks
 
 ----------------------------------------
-score: 0.22461869820985783
+score: 0.20763936477824455
+ id: 6
+ nom de fichier: 103342-article.txt
+ titre de texte: INSECURE, EXASPERATED AND BORED WITH THE OLD POLITICS 
+ sous-titre: The American shogunate
+
+----------------------------------------
+score: 0.20763936477824455
+ id: 8
+ nom de fichier: 2001-08-FRANK-15516.txt
+ titre de texte: PARADIS DE BANLIEUE, VERSION AMÉRICAINE
+ sous-titre: Le bonheur est dans le centre commercial...
+
+----------------------------------------
+score: 0.20763936477824455
  id: 21
  nom de fichier: 103358-article.txt
  titre de texte: END OF THE NEW WORKPLACE 
  sous-titre: Smiling serfs of the new economy 
 
 ----------------------------------------
-score: 0.22461869820985783
+score: 0.20763936477824455
  id: 24
  nom de fichier: 103167-article.txt
  titre de texte: AMERICAN BURBS 
